@@ -2,28 +2,18 @@ package com.bignerdranch.android.tengecalculator;
 
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
 import java.lang.*;
-import java.security.spec.ECField;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     double kztusd;
     double rubusd;
     double kztrub;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         String url = "https://cdn.cur.su/api/latest.json";
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, response -> {
-
             try {
             JSONObject jsonObject = response.getJSONObject("rates");
              kztusd = jsonObject.getDouble("KZT");
@@ -60,8 +50,6 @@ public class MainActivity extends AppCompatActivity {
         queue.add(request);
     }
 
-
-    // сохранение состояния
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putString("OPERATION", lastOperation);
@@ -70,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
-    // получение ранее сохраненного состояния
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -80,18 +67,11 @@ public class MainActivity extends AppCompatActivity {
         operationField.setText(lastOperation);
     }
 
-    // обработка нажатия на числовую кнопку
     public void onNumberClick(View view) {
-
         Button button = (Button) view;
         numberField.append(button.getText());
-
-//        if (lastOperation.equals("=") && operand != null) {
-//            operand = null;
-//        }
     }
 
-    // обработка нажатия на кнопку операции
     public void onOperationClick(View view) {
 
         Button button = (Button) view;
@@ -99,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
         String number = numberField.getText().toString();
         lastOperation = op;
 
-        // если введенно что-нибудь
         if (number.length() > 0) {
             number = number.replace(',', '.');
             try {
@@ -112,8 +91,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void performOperation(Double number, String operation) {
-
-        // если операнд ранее не был установлен (при вводе самой первой операции)
         if (operand == null) {
             operand = number;
         }
@@ -128,5 +105,4 @@ public class MainActivity extends AppCompatActivity {
             resultField.setText(operand.toString().replace('.', ','));
             numberField.setText("");
         }
-
 }
